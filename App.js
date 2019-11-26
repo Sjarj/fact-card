@@ -1,28 +1,29 @@
 import React from 'react';
-import { StyleSheet, Animated, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {};
-
-    this.position = new Animated.ValueXY(0, 0);
-    Animated.spring(this.position, { toValue: { x: 200, y: 300 } }).start();
   }
+
   render() {
     return (
-      <Animated.View style={this.position.getLayout()}>
-        <View style={style.square} />
-      </Animated.View>
+      <View style={style.container}>
+        <Text style={style.title}>Fact Swipe</Text>
+      </View>
     );
   }
 }
 
 const style = StyleSheet.create({
-  square: {
-    width: 100,
-    height: 100,
-    backgroundColor: `red`
+  container: {
+    flex: 1,
+    backgroundColor: `#fff`,
+    marginTop: 50
+  },
+  title: {
+    fontSize: 30
   }
 });
