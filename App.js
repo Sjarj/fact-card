@@ -15,10 +15,10 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { panResponder: undefined };
-    this.position = new Animated.ValueXY();
   }
 
   componentDidMount = () => {
+    this.position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gesture) => {
@@ -30,8 +30,7 @@ export default class App extends React.Component {
       onPanResponderRelease: (event, gesture) => {
         if (gesture.dx < LEFT_TRESHOLD_BEFORE_SWIPE) {
           this.forceLeftExit();
-        }
-        if (gesture.dx > RIGHT_TRESHOLD_BEFORE_SWIPE) {
+        } else if (gesture.dx > RIGHT_TRESHOLD_BEFORE_SWIPE) {
           this.forceRightExit();
         } else {
           this.resetPositionSoft();
