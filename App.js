@@ -1,24 +1,35 @@
 import React from 'react';
 import { StyleSheet, Text, View, Animated, PanResponder } from 'react-native';
+
 import FactCard from './components/fact-card';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import axios from 'axios';
 
 const MAX_LEFT_ROTATION_DISTANCE = wp('-150%');
 const MAX_RIGHT_ROTATION_DISTANCE = wp('150%');
 const LEFT_TRESHOLD_BEFORE_SWIPE = wp('-50%');
 const RIGHT_TRESHOLD_BEFORE_SWIPE = wp('50%');
+const RANDOM_FACT_URL =
+  'http://randomuselessfact.appspot.com/random.json?language=en';
+const PICTURE_LIST_URL = `https://picsum.photos/${hp('30%')}/${wp(
+  '90%'
+)}?image=`;
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { panResponder: undefined };
+    this.state = {
+      panResponder: undefined,
+      topFact: undefined,
+      bottomFact: undefined
+    };
+    this.position = new Animated.ValueXY();
   }
 
   componentDidMount = () => {
-    this.position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gesture) => {
@@ -38,6 +49,20 @@ export default class App extends React.Component {
       }
     });
     this.setState({ panResponder });
+    axios.get(RANDOM_FACT_URL).then(response => {
+      this.setState({
+        topFact: { ...response.data, image: this.getRandomImageUrl() }
+      });
+    });
+    axios.get(RANDOM_FACT_URL).then(response => {
+      this.setState({
+        bottomFact: { ...response.data, image: this.getRandomImageUrl() }
+      });
+    });
+  };
+
+  getRandomImageUrl = () => {
+    return `${PICTURE_LIST_URL}${Math.floor(Math.random() * 500 + 1)}`;
   };
 
   forceLeftExit = () => {
@@ -85,6 +110,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    console.log(this.state.topFact, this.state.bottomFact);
     return (
       <View style={style.container}>
         <Text style={style.title}>Fact Swipe</Text>
