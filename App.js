@@ -6,7 +6,6 @@ import {
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
-const CARD_X_ORIGIN = wp('0%');
 const MAX_LEFT_ROTATION_DISTANCE = wp('-150%');
 const MAX_RIGHT_ROTATION_DISTANCE = wp('150%');
 const LEFT_TRESHOLD_BEFORE_SWIPE = wp('-50%');
@@ -59,31 +58,41 @@ export default class App extends React.Component {
 
   getCardStyle = () => {
     const rotation = this.position.x.interpolate({
-      inputRange: [
-        MAX_LEFT_ROTATION_DISTANCE,
-        CARD_X_ORIGIN,
-        MAX_RIGHT_ROTATION_DISTANCE
-      ],
+      inputRange: [MAX_LEFT_ROTATION_DISTANCE, 0, MAX_RIGHT_ROTATION_DISTANCE],
       outputRange: ['-120deg', '0deg', '120deg']
     });
     return {
-      transform: [{ rotate: rotation }],
-      ...this.position.getLayout()
+      ...this.position.getLayout(),
+      transform: [{ rotate: rotation }]
     };
+  };
+
+  renderTopCard = () => {
+    return (
+      <Animated.View
+        {...this.state.panResponder.panHandlers}
+        style={this.getCardStyle()}
+      >
+        <FactCard />
+      </Animated.View>
+    );
+  };
+  renderBottomCard = () => {
+    return (
+      <View style={{ zIndex: -1, position: 'absolute' }}>
+        <FactCard />
+      </View>
+    );
   };
 
   render() {
     return (
       <View style={style.container}>
         <Text style={style.title}>Fact Swipe</Text>
-        {this.state.panResponder && (
-          <Animated.View
-            {...this.state.panResponder.panHandlers}
-            style={this.getCardStyle()}
-          >
-            <FactCard />
-          </Animated.View>
-        )}
+        <View>
+          {this.state.panResponder && this.renderTopCard()}
+          {this.state.panResponder && this.renderBottomCard()}
+        </View>
       </View>
     );
   }
