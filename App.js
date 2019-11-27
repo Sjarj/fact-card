@@ -10,15 +10,29 @@ export default class App extends React.Component {
     this.position = new Animated.ValueXY();
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gesture) => {
-        console.log(gesture);
+        this.position.setValue({
+          x: gesture.dx,
+          y: gesture.dy
+        });
       }
     });
     this.setState({ panResponder });
-  }
+  };
+
+  getCardStyle = () => {
+    const rotation = this.position.x.interpolate({
+      inputRange: [-200, 0, 200],
+      outputRange: ['-120deg', '0deg', '120deg']
+    });
+    return {
+      transform: [{ rotate: rotation }],
+      ...this.position.getLayout()
+    };
+  };
 
   render() {
     return (
@@ -27,7 +41,7 @@ export default class App extends React.Component {
         {this.state.panResponder && (
           <Animated.View
             {...this.state.panResponder.panHandlers}
-            style={this.position.getLayout()}
+            style={this.getCardStyle()}
           >
             <FactCard />
           </Animated.View>
