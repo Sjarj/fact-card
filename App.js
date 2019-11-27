@@ -1,19 +1,37 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Animated, PanResponder } from 'react-native';
 import FactCard from './components/fact-card';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { panResponder: undefined };
+    this.position = new Animated.ValueXY();
+  }
 
-    this.state = {};
+  componentDidMount() {
+    const panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gesture) => {
+        console.log(gesture);
+      }
+    });
+    this.setState({ panResponder });
   }
 
   render() {
     return (
       <View style={style.container}>
         <Text style={style.title}>Fact Swipe</Text>
-        <FactCard />
+        {this.state.panResponder && (
+          <Animated.View
+            {...this.state.panResponder.panHandlers}
+            style={this.position.getLayout()}
+          >
+            <FactCard />
+          </Animated.View>
+        )}
       </View>
     );
   }
@@ -27,6 +45,7 @@ const style = StyleSheet.create({
     marginTop: 50
   },
   title: {
-    fontSize: 30
+    fontSize: 30,
+    marginBottom: hp('10%')
   }
 });
