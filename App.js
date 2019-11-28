@@ -14,9 +14,7 @@ const LEFT_TRESHOLD_BEFORE_SWIPE = wp('-50%');
 const RIGHT_TRESHOLD_BEFORE_SWIPE = wp('50%');
 const RANDOM_FACT_URL =
   'http://randomuselessfact.appspot.com/random.json?language=en';
-const PICTURE_LIST_URL = `https://picsum.photos/${hp('30%')}/${wp(
-  '90%'
-)}?image=`;
+const PICTURE_LIST_URL = `https://picsum.photos/${hp('30%')}?image=`;
 
 export default class App extends React.Component {
   constructor(props) {

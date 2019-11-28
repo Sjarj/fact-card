@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Button } from 'react-native';
+import { Text, View, Image, Button, Linking } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -21,14 +21,15 @@ export default class FactCard extends Component {
         <Image
           style={{ width: wp('90%'), height: hp('30%') }}
           source={{
-            uri: `https://picsum.photos/${hp('30%')}/300`
+            uri: this.props.fact.image
           }}
         />
-        <Text>ommgifjgigjrpijferpg idjfidfjeiaorjfaoezfj idf</Text>
+        <Text>{this.props.fact.text}</Text>
         <Button
           title='See the source'
+          disabled={this.props.disabled}
           onPress={() => {
-            console.log('todo');
+            Linking.openURL(this.props.fact.source_url);
           }}
         />
       </View>
