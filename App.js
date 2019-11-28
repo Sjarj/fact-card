@@ -48,15 +48,16 @@ export default class App extends React.Component {
         }
       }
     });
-    this.setState({ panResponder });
-    axios.get(RANDOM_FACT_URL).then(response => {
-      this.setState({
-        topFact: { ...response.data, image: this.getRandomImageUrl() }
+    this.setState({ panResponder }, () => {
+      axios.get(RANDOM_FACT_URL).then(response => {
+        this.setState({
+          topFact: { ...response.data, image: this.getRandomImageUrl() }
+        });
       });
-    });
-    axios.get(RANDOM_FACT_URL).then(response => {
-      this.setState({
-        bottomFact: { ...response.data, image: this.getRandomImageUrl() }
+      axios.get(RANDOM_FACT_URL).then(response => {
+        this.setState({
+          bottomFact: { ...response.data, image: this.getRandomImageUrl() }
+        });
       });
     });
   };
@@ -97,26 +98,25 @@ export default class App extends React.Component {
         {...this.state.panResponder.panHandlers}
         style={this.getCardStyle()}
       >
-        <FactCard />
+        <FactCard disabled={false} fact={this.state.topFact} />
       </Animated.View>
     );
   };
   renderBottomCard = () => {
     return (
       <View style={{ zIndex: -1, position: 'absolute' }}>
-        <FactCard />
+        <FactCard disabled={true} fact={this.state.bottomFact} />
       </View>
     );
   };
 
   render() {
-    console.log(this.state.topFact, this.state.bottomFact);
     return (
       <View style={style.container}>
         <Text style={style.title}>Fact Swipe</Text>
         <View>
-          {this.state.panResponder && this.renderTopCard()}
-          {this.state.panResponder && this.renderBottomCard()}
+          {this.state.topFact && this.renderTopCard()}
+          {this.state.bottomFact && this.renderBottomCard()}
         </View>
       </View>
     );
