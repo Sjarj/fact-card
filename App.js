@@ -29,7 +29,9 @@ export default class App extends React.Component {
 
   componentDidMount = () => {
     const panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (event, gesture) => {
+        return Math.abs(gesture.dx) > Math.abs(gesture.dy * 3);
+      },
       onPanResponderMove: (event, gesture) => {
         this.position.setValue({
           x: gesture.dx,
@@ -52,10 +54,14 @@ export default class App extends React.Component {
           topFact: { ...response.data, image: this.getRandomImageUrl() }
         });
       });
-      axios.get(RANDOM_FACT_URL).then(response => {
-        this.setState({
-          bottomFact: { ...response.data, image: this.getRandomImageUrl() }
-        });
+      this.loadBottomFact();
+    });
+  };
+
+  loadBottomFact = () => {
+    axios.get(RANDOM_FACT_URL).then(response => {
+      this.setState({
+        bottomFact: { ...response.data, image: this.getRandomImageUrl() }
       });
     });
   };
@@ -64,15 +70,24 @@ export default class App extends React.Component {
     return `${PICTURE_LIST_URL}${Math.floor(Math.random() * 500 + 1)}`;
   };
 
+  onCardExitDone = () => {
+    this.setState({ topFact: this.state.bottomFact });
+    this.loadBottomFact();
+    this.position.setValue({
+      x: 0,
+      y: 0
+    });
+  };
+
   forceLeftExit = () => {
     Animated.timing(this.position, {
       toValue: { x: wp('-100%'), y: 0 }
-    }).start();
+    }).start(this.onCardExitDone);
   };
   forceRightExit = () => {
     Animated.timing(this.position, {
       toValue: { x: wp('100%'), y: 0 }
-    }).start();
+    }).start(this.onCardExitDone);
   };
 
   resetPositionSoft = () => {

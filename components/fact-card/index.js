@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Button, Linking } from 'react-native';
+import { Text, View, Image, Button, Linking, ScrollView } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -24,7 +24,10 @@ export default class FactCard extends Component {
             uri: this.props.fact.image
           }}
         />
-        <Text>{this.props.fact.text}</Text>
+        <ScrollView style={{ height: hp('10%') }}>
+          <Text>{this.props.fact.text}</Text>
+        </ScrollView>
+
         <Button
           title='See the source'
           disabled={this.props.disabled}
