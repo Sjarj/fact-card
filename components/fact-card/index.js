@@ -6,6 +6,10 @@ import {
 } from 'react-native-responsive-screen';
 
 export default class FactCard extends Component {
+  gotToTopScrollView = () => {
+    this.ScrollView.scrollTo({ x: 0, y: 0, animated: true });
+  };
+
   render() {
     return (
       <View
@@ -24,7 +28,13 @@ export default class FactCard extends Component {
             uri: this.props.fact.image
           }}
         />
-        <ScrollView style={{ height: hp('10%') }}>
+        <ScrollView
+          ref={ScrollViewRef => {
+            this.ScrollView = ScrollViewRef;
+          }}
+          style={{ height: hp('10%') }}
+          onScrollEndDrag={this.gotToTopScrollView}
+        >
           <Text>{this.props.fact.text}</Text>
         </ScrollView>
 
